@@ -8,13 +8,19 @@ function createToken(userId) {
   });
 }
 
-function setAuthCookie(res, token) {
-  res.cookie("token", token, {
+function getCookieOptions() {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  };
+}
+
+function setAuthCookie(res, token) {
+  res.cookie("token", token, getCookieOptions());
 }
 
 export const register = async (req, res) => {
@@ -57,7 +63,7 @@ export const register = async (req, res) => {
 
     setAuthCookie(res, token);
 
-    res.status(201).json({
+    return res.status(201).json({
       user: {
         id: user._id,
         name: user.name,
@@ -65,9 +71,9 @@ export const register = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Register error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Eroare server.",
     });
   }
@@ -105,7 +111,7 @@ export const login = async (req, res) => {
 
     setAuthCookie(res, token);
 
-    res.json({
+    return res.json({
       user: {
         id: user._id,
         name: user.name,
@@ -113,22 +119,24 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Login error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Eroare server.",
     });
   }
 };
 
 export const logout = (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.clearCookie("token", {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
 
-  res.json({
+  return res.json({
     message: "Logout realizat.",
   });
 };
@@ -143,11 +151,13 @@ export const getMe = async (req, res) => {
       });
     }
 
-    res.json({
+    return res.json({
       user,
     });
-  } catch {
-    res.status(500).json({
+  } catch (error) {
+    console.error("GetMe error:", error);
+
+    return res.status(500).json({
       message: "Eroare server.",
     });
   }
