@@ -4,23 +4,12 @@ import "./Register.css";
 
 import { apiRequest } from "../services/api";
 
-const userIcon =
-  "https://www.figma.com/api/mcp/asset/8d5dd8c1-c154-4504-b5a0-4521d8df25d5.svg";
-
-const lockIcon =
-  "https://www.figma.com/api/mcp/asset/650c6355-f857-4796-9772-222e71ed5bfc.svg";
-
-const emailIcon =
-  "https://www.figma.com/api/mcp/asset/1c449f2c-5226-4606-9d05-0d64f0d43382.svg";
-
-const logoIcon =
-  "https://www.figma.com/api/mcp/asset/700f3bb8-0e3c-4d68-9c23-80c379ecab5c.svg";
-
-const moneyLeft =
-  "https://www.figma.com/api/mcp/asset/75f964af-ff64-4eb7-9e0b-b3d76ee5faaa.png";
-
-const moneyRight =
-  "https://www.figma.com/api/mcp/asset/7e6aee65-1223-4235-83f3-497622b4b72e.png";
+import userIcon from "../assets/register/user.svg";
+import emailIcon from "../assets/register/email.svg";
+import lockIcon from "../assets/register/lock.svg";
+import logoIcon from "../assets/register/logo.svg";
+import moneyLeft from "../assets/register/money-left.png";
+import moneyRight from "../assets/register/money-right.png";
 
 function Register() {
   const navigate = useNavigate();
