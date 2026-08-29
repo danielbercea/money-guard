@@ -1,1 +1,432 @@
-/* Temporary Register styles */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+.register-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at 17% 20%,
+      rgba(74, 86, 226, 0.72) 0%,
+      rgba(42, 28, 94, 0.35) 30%,
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 82% 22%,
+      rgba(158, 64, 186, 0.72) 0%,
+      rgba(68, 33, 88, 0.25) 31%,
+      transparent 58%
+    ),
+    radial-gradient(
+      circle at 21% 88%,
+      rgba(112, 0, 255, 0.5) 0%,
+      transparent 46%
+    ),
+    #101010;
+
+  font-family: "Poppins", sans-serif;
+}
+
+.register-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.register-glow-left {
+  width: 620px;
+  height: 620px;
+  left: -260px;
+  bottom: -250px;
+  background: rgba(112, 0, 255, 0.32);
+}
+
+.register-glow-right {
+  width: 520px;
+  height: 520px;
+  top: -220px;
+  right: -150px;
+  background: rgba(158, 64, 186, 0.32);
+}
+
+.register-money {
+  position: absolute;
+  top: 50%;
+  height: 112vh;
+  max-height: 896px;
+  object-fit: contain;
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
+}
+
+.register-money-left {
+  left: -65px;
+  width: 546px;
+  transform: translateY(-50%);
+  object-position: bottom;
+}
+
+.register-money-right {
+  right: -30px;
+  width: 450px;
+  transform: translateY(-50%);
+  object-position: bottom;
+}
+
+.register-card {
+  position: relative;
+  z-index: 10;
+
+  width: 533px;
+  height: 624px;
+
+  padding: 39px 54px 40px;
+
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.1);
+
+  box-shadow:
+    0 4px 60px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.015);
+
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+}
+
+.register-logo {
+  width: 100%;
+  height: 96px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  color: #fbfbfb;
+}
+
+.register-logo img {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 9px;
+}
+
+.register-logo h1 {
+  margin: 0;
+
+  color: #fbfbfb;
+
+  font-size: 27px;
+  font-weight: 400;
+  line-height: 40px;
+}
+
+.register-error {
+  position: absolute;
+  top: 145px;
+  left: 54px;
+  right: 54px;
+
+  min-height: 28px;
+  padding: 5px 10px;
+
+  border-radius: 6px;
+
+  background: rgba(255, 134, 141, 0.12);
+
+  color: #ff868d;
+
+  font-size: 12px;
+  text-align: center;
+}
+
+.register-form {
+  margin-top: 20px;
+}
+
+.register-field {
+  position: relative;
+
+  width: 409px;
+  height: 60px;
+
+  margin-bottom: 15px;
+
+  display: flex;
+  align-items: center;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.register-field img {
+  width: 24px;
+  height: 24px;
+
+  margin-left: 10px;
+  margin-right: 20px;
+
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.register-field input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0 10px 0 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #fbfbfb;
+
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+
+  caret-color: #ffb627;
+}
+
+.register-field input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+
+.register-field:focus-within {
+  border-bottom-color: rgba(255, 255, 255, 0.8);
+}
+
+.register-field-confirm {
+  margin-bottom: 39px;
+}
+
+.register-field-confirm::after {
+  content: "";
+
+  position: absolute;
+
+  left: -2px;
+  bottom: -9px;
+
+  width: 150px;
+  height: 4px;
+
+  border-radius: 10px;
+
+  background: #ffb627;
+
+  box-shadow:
+    0 0 8px rgba(255, 182, 39, 0.8),
+    0 0 18px rgba(255, 182, 39, 0.45);
+}
+
+.register-field-confirm::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: -9px;
+
+  height: 3px;
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.register-button,
+.register-login-button {
+  width: 300px;
+  height: 50px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 20px;
+
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  box-shadow: 1px 9px 15px rgba(0, 0, 0, 0.2);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.register-button {
+  margin-bottom: 20px;
+
+  background: linear-gradient(125deg, #ffc727 16%, #9e40ba 97%, #7000ff 151%);
+
+  color: #ffffff;
+}
+
+.register-button:hover:not(:disabled),
+.register-login-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 1px 11px 18px rgba(0, 0, 0, 0.28);
+}
+
+.register-button:active:not(:disabled),
+.register-login-button:active {
+  transform: translateY(1px);
+}
+
+.register-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.register-login-button {
+  background: #fcfcfc;
+  color: #623f8b;
+}
+
+@media (max-width: 700px) {
+  .register-page {
+    min-height: 100dvh;
+    padding: 20px 16px;
+
+    background:
+      radial-gradient(
+        circle at 20% 20%,
+        rgba(74, 86, 226, 0.65),
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 65%,
+        rgba(158, 64, 186, 0.42),
+        transparent 52%
+      ),
+      #101010;
+  }
+
+  .register-money {
+    height: 100%;
+    opacity: 0.22;
+  }
+
+  .register-money-left {
+    left: -260px;
+  }
+
+  .register-money-right {
+    right: -245px;
+  }
+
+  .register-card {
+    width: min(100%, 420px);
+    height: auto;
+
+    min-height: 600px;
+
+    padding: 36px 26px 32px;
+  }
+
+  .register-form {
+    width: 100%;
+  }
+
+  .register-field {
+    width: 100%;
+  }
+
+  .register-button,
+  .register-login-button {
+    width: min(300px, 100%);
+  }
+
+  .register-error {
+    left: 26px;
+    right: 26px;
+  }
+}
+
+@media (max-width: 380px) {
+  .register-page {
+    padding: 12px;
+  }
+
+  .register-card {
+    min-height: 570px;
+    padding: 28px 20px 28px;
+  }
+
+  .register-logo {
+    height: 88px;
+  }
+
+  .register-logo img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .register-logo h1 {
+    font-size: 24px;
+  }
+
+  .register-form {
+    margin-top: 12px;
+  }
+
+  .register-field {
+    height: 56px;
+    margin-bottom: 12px;
+  }
+
+  .register-field img {
+    width: 22px;
+    height: 22px;
+    margin-left: 8px;
+    margin-right: 16px;
+  }
+
+  .register-field input {
+    font-size: 16px;
+  }
+
+  .register-field-confirm {
+    margin-bottom: 34px;
+  }
+
+  .register-button,
+  .register-login-button {
+    height: 48px;
+    font-size: 16px;
+  }
+
+  .register-button {
+    margin-bottom: 16px;
+  }
+}
