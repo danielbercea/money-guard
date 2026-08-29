@@ -3,27 +3,29 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 function createToken(userId) {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
+  return jwt.sign(
+    {
+      userId,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    },
+  );
 }
 
-function getCookieOptions() {
+function setAuthCookie(res, token) {
   const isProduction = process.env.NODE_ENV === "production";
 
-  return {
+  res.cookie("token", token, {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
-  };
+  });
 }
 
-function setAuthCookie(res, token) {
-  res.cookie("token", token, getCookieOptions());
-}
-
-export const register = async (req, res) => {
+export async function register(req, res) {
   try {
     const { name, email, password } = req.body;
 
@@ -33,20 +35,14 @@ export const register = async (req, res) => {
       });
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({
-        message: "Parola trebuie să aibă minimum 6 caractere.",
-      });
-    }
-
     const normalizedEmail = email.trim().toLowerCase();
 
-    const exists = await User.findOne({
+    const existingUser = await User.findOne({
       email: normalizedEmail,
     });
 
-    if (exists) {
-      return res.status(409).json({
+    if (existingUser) {
+      return res.status(400).json({
         message: "Există deja un cont cu acest e-mail.",
       });
     }
@@ -64,6 +60,7 @@ export const register = async (req, res) => {
     setAuthCookie(res, token);
 
     return res.status(201).json({
+      message: "Cont creat cu succes.",
       user: {
         id: user._id,
         name: user.name,
@@ -71,26 +68,28 @@ export const register = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Register error:", error);
+    console.error("Register error:", error.message);
 
     return res.status(500).json({
-      message: "Eroare server.",
+      message: "Eroare la crearea contului.",
     });
   }
-};
+}
 
-export const login = async (req, res) => {
+export async function login(req, res) {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
-        message: "Introdu e-mailul și parola.",
+        message: "Completează e-mailul și parola.",
       });
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     const user = await User.findOne({
-      email: email.trim().toLowerCase(),
+      email: normalizedEmail,
     });
 
     if (!user) {
@@ -99,9 +98,9 @@ export const login = async (req, res) => {
       });
     }
 
-    const validPassword = await bcrypt.compare(password, user.password);
+    const passwordMatches = await bcrypt.compare(password, user.password);
 
-    if (!validPassword) {
+    if (!passwordMatches) {
       return res.status(401).json({
         message: "E-mail sau parolă incorectă.",
       });
@@ -112,6 +111,7 @@ export const login = async (req, res) => {
     setAuthCookie(res, token);
 
     return res.json({
+      message: "Autentificare reușită.",
       user: {
         id: user._id,
         name: user.name,
@@ -119,46 +119,54 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Login error:", error.message);
 
     return res.status(500).json({
-      message: "Eroare server.",
+      message: "Eroare la autentificare.",
     });
   }
-};
+}
 
-export const logout = (req, res) => {
-  const isProduction = process.env.NODE_ENV === "production";
+export async function logout(req, res) {
+  try {
+    const isProduction = process.env.NODE_ENV === "production";
 
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-  });
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+    });
 
-  return res.json({
-    message: "Logout realizat.",
-  });
-};
+    return res.json({
+      message: "Deconectare reușită.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Eroare la deconectare.",
+    });
+  }
+}
 
-export const getMe = async (req, res) => {
+export async function getMe(req, res) {
   try {
     const user = await User.findById(req.userId).select("-password");
 
     if (!user) {
       return res.status(404).json({
-        message: "Utilizatorul nu există.",
+        message: "Utilizatorul nu a fost găsit.",
       });
     }
 
     return res.json({
-      user,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (error) {
-    console.error("GetMe error:", error);
-
     return res.status(500).json({
-      message: "Eroare server.",
+      message: "Eroare la încărcarea utilizatorului.",
     });
   }
-};
+}
