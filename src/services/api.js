@@ -19,7 +19,9 @@ export async function apiRequest(endpoint, options = {}) {
   }
 
   if (!response.ok) {
-    throw new Error(data.message || "A apărut o eroare.");
+    const error = new Error(data.message || "A apărut o eroare.");
+    error.status = response.status;
+    throw error;
   }
 
   return data;

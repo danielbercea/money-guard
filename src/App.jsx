@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 
@@ -11,32 +11,75 @@ import { apiRequest } from "./services/api";
 
 import "./App.css";
 
+const SESSION_CHECK_TIMEOUT_MS = 10_000;
+
 function ProtectedRoute({ children }) {
-  const [authenticated, setAuthenticated] = useState(null);
+  const [session, setSession] = useState("checking");
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+      setSession("unavailable");
+    }, SESSION_CHECK_TIMEOUT_MS);
+
     async function checkAuth() {
       try {
-        await apiRequest("/auth/me");
-
-        setAuthenticated(true);
-      } catch {
-        setAuthenticated(false);
+        const data = await apiRequest("/auth/me", { signal: controller.signal });
+        if (!controller.signal.aborted) {
+          setSession(data.user ? "authenticated" : "unavailable");
+        }
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          setSession(
+            error.status === 401 || error.status === 404
+              ? "signed-out"
+              : "unavailable",
+          );
+        }
+      } finally {
+        clearTimeout(timeout);
       }
     }
 
     checkAuth();
-  }, []);
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [attempt]);
 
-  if (authenticated === null) {
-    return <div className="loading-page">Loading...</div>;
-  }
-
-  if (!authenticated) {
+  if (session === "signed-out") {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
+  if (session === "authenticated") {
+    return children;
+  }
+
+  function retry() {
+    setSession("checking");
+    setAttempt((value) => value + 1);
+  }
+
+  return (
+    <main className="loading-page">
+      <div>
+        <p role="status">
+          {session === "checking"
+            ? "Connecting to Money Guard..."
+            : "The server is taking longer than expected. Try again in a moment."}
+        </p>
+        {session === "unavailable" && (
+          <button type="button" onClick={retry}>
+            Try again
+          </button>
+        )}{" "}
+        <Link to="/login">Go to login</Link>
+      </div>
+    </main>
+  );
 }
 
 function App() {
